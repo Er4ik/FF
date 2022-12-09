@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm-run-all -l -p -c --aggregate-output dev:*",
+    "dev:backend": "cd ff-backend && npm run start",
+    "dev:frontend": "cd ff-frontend && npm run start",
+    "dev:mobile": "cd ff-mobile-app && npm run start",
+    "install-all": "npm-run-all -l -p -c --aggregate-output install:*",
+    "install:backend": "cd ff-backend && npm install",
+    "install:frontend": "cd ff-frontend && npm install",
+    "install:mobile-app": "cd ff-mobile-app && npm install",
     "lint": "eslint --ext .js,.ts . --ignore-path .gitignore",
     "lint:fix": "npm run lint -- --fix --ignore-path .gitignore",
     "prettier": "prettier --check . --ignore-path .gitignore",
     "prettier:fix": "prettier --write . --ignore-path .gitignore",
-    "prepare": "husky install",
-    "install-all": "npm-run-all -l -p -c --aggregate-output install:*",
-    "install:backend": "cd ff-backend && npm install",
-    "install:frontend": "cd ff-frontend && npm install",
-    "install:mobile-app": "cd ff-mobile-app && npm install"
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
