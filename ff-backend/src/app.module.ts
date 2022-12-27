@@ -2,34 +2,38 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { UserEntity } from './users/entitites/user.entity';
-import { PostsEntity } from './posts/entitites/posts.entity';
+import { PostEntity } from './posts/entitites/post.entity';
 import { FridgeEntity } from './fridge/entitites/fridge.entity';
-import { PostsMediaEntity } from './posts/entitites/posts-media.entity';
+import { PostMediaEntity } from './posts/entitites/post-media.entity';
 import { UserController } from './users/user.controller';
-import { PostsController } from './posts/posts.controller';
+import { PostController } from './posts/post.controller';
 import { FridgeController } from './fridge/fridge.controller';
-import { CommentsController } from './comments/comments.controller';
+import { CommentController } from './comments/comment.controller';
 import { BasketController } from './basket/basket.controller';
 import { UserService } from './users/user.service';
-import { PostsService } from './posts/posts.service';
+import { PostService } from './posts/post.service';
 import { FridgeService } from './fridge/fridge.service';
-import { CommentsService } from './comments/comments.service';
+import { CommentService } from './comments/comment.service';
 import { BasketService } from './basket/basket.service';
+import { BasketEntity } from './basket/entitites/basket.entity';
+import { CommentEntity } from './comments/entitites/comment.entity';
+import { PostLikeEntity } from './posts/entitites/post-likes.entity';
+import { followerUser } from './users/entitites/user-follower.entity';
 dotenv.config();
 
 @Module({
   controllers: [
     UserController,
-    PostsController,
+    PostController,
     FridgeController,
-    CommentsController,
+    CommentController,
     BasketController,
   ],
   providers: [
     UserService,
-    PostsService,
+    PostService,
     FridgeService,
-    CommentsService,
+    CommentService,
     BasketService,
   ],
   imports: [
@@ -40,7 +44,16 @@ dotenv.config();
       username: process.env.DB_USERNAME || '',
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || '',
-      entities: [UserEntity, PostsEntity, PostsMediaEntity, FridgeEntity],
+      entities: [
+        UserEntity,
+        PostEntity,
+        PostMediaEntity,
+        FridgeEntity,
+        BasketEntity,
+        CommentEntity,
+        PostLikeEntity,
+        followerUser,
+      ],
       synchronize: true,
     }),
   ],

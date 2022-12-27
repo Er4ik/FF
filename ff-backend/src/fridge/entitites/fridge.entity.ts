@@ -1,4 +1,4 @@
-import { PostsMediaEntity } from './../../posts/entitites/posts-media.entity';
+import { PostMediaEntity } from '../../posts/entitites/post-media.entity';
 import { UserEntity } from '../../users/entitites/user.entity';
 import {
   Column,
@@ -22,12 +22,12 @@ export class FridgeEntity {
   @Column({ name: 'type_weight', type: 'int', nullable: true })
   typeWeight!: number;
 
-  @ManyToOne(() => PostsMediaEntity, (user) => user.id)
+  @ManyToOne(() => PostMediaEntity, (post) => post.id)
   @JoinColumn({ name: 'media_id' })
   mediaId!: string;
 
   @Column({ name: 'description', type: 'text', nullable: true })
-  description!: number;
+  description!: string;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'created_by' })

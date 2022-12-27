@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
-import { CommentsService } from './comments.service';
+import { CommentService } from './comment.service';
 
 @Controller('comments')
-export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
+export class CommentController {
+  constructor(private readonly commentsService: CommentService) {}
 
   @Get()
   getHello(): string {
