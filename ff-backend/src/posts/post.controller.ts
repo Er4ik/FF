@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { PostService } from './post.service';
 
-@Controller('posts')
+@Controller('post')
 export class PostController {
   constructor(private readonly postsService: PostService) {}
 
   @Get()
-  getHello(): string {
-    return this.postsService.getHello();
+  async getHello(): Promise<string> {
+    return await this.postsService.getHello();
   }
 }

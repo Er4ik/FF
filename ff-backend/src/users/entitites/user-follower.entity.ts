@@ -2,7 +2,7 @@ import { Entity, JoinColumn, ManyToMany, PrimaryColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 
 @Entity({ name: `user_follower_entity` })
-export class followerUser {
+export class UserFollowerEntity {
   @PrimaryColumn({ type: 'int' })
   id!: number;
 

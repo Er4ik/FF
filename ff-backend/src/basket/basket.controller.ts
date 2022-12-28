@@ -6,7 +6,7 @@ export class BasketController {
   constructor(private readonly basketService: BasketService) {}
 
   @Get()
-  getHello(): string {
+  async getHello(): Promise<string> {
     return this.basketService.getHello();
   }
 }
