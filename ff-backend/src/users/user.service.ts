@@ -14,6 +14,7 @@ export class UserService {
   ) {}
 
   async getHello(): Promise<string> {
+    this.userRepository.find();
     return 'Hello World from User Service!';
   }
 }
