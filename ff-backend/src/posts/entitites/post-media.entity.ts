@@ -5,14 +5,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { PostsEntity } from './posts.entity';
+import { PostEntity } from './post.entity';
 
-@Entity({ name: `posts_media_entity` })
-export class PostsMediaEntity {
+@Entity({ name: `post_media_entity` })
+export class PostMediaEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => PostsEntity, (posts) => posts.id)
+  @ManyToOne(() => PostEntity, (posts) => posts.id)
   @JoinColumn({ name: 'posts_id' })
   postsId!: number;
 

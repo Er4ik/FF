@@ -1,11 +1,4 @@
-import { PostsEntity } from '../../posts/entitites/posts.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: `user_entity` })
 export class UserEntity {
@@ -37,7 +30,7 @@ export class UserEntity {
   isActive!: boolean;
 
   @Column({ name: 'is_blocked', type: 'bool', default: false })
-  isBlocked!: Date;
+  isBlocked!: boolean;
 
   @Column({
     name: 'created_at',
@@ -51,5 +44,5 @@ export class UserEntity {
   updatedAt!: Date;
 
   @Column({ name: 'role', type: 'varchar', length: 20, nullable: false })
-  role!: Date;
+  role!: string;
 }
