@@ -6,7 +6,7 @@ export class FridgeController {
   constructor(private readonly fridgeService: FridgeService) {}
 
   @Get()
-  getHello(): string {
+  async getHello(): Promise<string> {
     return this.fridgeService.getHello();
   }
 }

@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { CommentService } from './comment.service';
 
-@Controller('comments')
+@Controller('comment')
 export class CommentController {
   constructor(private readonly commentsService: CommentService) {}
 
   @Get()
-  getHello(): string {
+  async getHello(): Promise<string> {
     return this.commentsService.getHello();
   }
 }
