@@ -1,7 +1,7 @@
 import { Entity, JoinColumn, ManyToMany, PrimaryColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 
-@Entity({ name: `follower` })
+@Entity({ name: `user_follower_entity` })
 export class followerUser {
   @PrimaryColumn({ type: 'int' })
   id!: number;
