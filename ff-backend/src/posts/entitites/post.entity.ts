@@ -4,8 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { PostLikeEntity } from './post-likes.entity';
+import { PostMediaEntity } from './post-media.entity';
 
 @Entity({ name: `post_entity` })
 export class PostEntity {
@@ -14,7 +17,7 @@ export class PostEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'created_by' })
-  createdBy!: number;
+  createdBy!: UserEntity;
 
   @Column({
     name: 'created_at',
@@ -32,4 +35,12 @@ export class PostEntity {
 
   @Column({ name: 'steps', type: 'json', nullable: true })
   steps!: string;
+
+  @OneToMany(() => PostLikeEntity, (postLikes) => postLikes.post)
+  @JoinColumn({ name: 'likes' })
+  likes!: PostLikeEntity[];
+
+  @OneToMany(() => PostMediaEntity, (postMedia) => postMedia.posts)
+  @JoinColumn({ name: 'media' })
+  media!: PostMediaEntity[];
 }

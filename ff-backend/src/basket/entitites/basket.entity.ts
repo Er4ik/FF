@@ -39,11 +39,11 @@ export class BasketEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'created_by' })
-  crearedBy!: number;
+  createdBy!: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'updated_by' })
-  updatedBy!: number;
+  updatedBy!: UserEntity;
 
   @Column({ name: 'is_active', type: 'boolean' })
   isActive!: boolean;

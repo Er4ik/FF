@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToMany, PrimaryColumn } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { UserEntity } from '../../users/entitites/user.entity';
 import { PostEntity } from './post.entity';
 
@@ -7,11 +7,11 @@ export class PostLikeEntity {
   @PrimaryColumn({ type: 'int' })
   id!: number;
 
-  @ManyToMany(() => UserEntity, (user) => user.id)
-  @JoinColumn({ name: 'user_id' })
-  userId!: string;
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'user' })
+  user!: UserEntity;
 
-  @ManyToMany(() => PostEntity, (post) => post.id)
-  @JoinColumn({ name: 'post_id' })
-  postId!: string;
+  @ManyToOne(() => PostEntity, (post) => post.likes)
+  @JoinColumn({ name: 'post' })
+  post!: PostEntity;
 }

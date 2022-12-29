@@ -24,18 +24,18 @@ export class FridgeEntity {
 
   @ManyToOne(() => PostMediaEntity, (post) => post.id)
   @JoinColumn({ name: 'media_id' })
-  mediaId!: string;
+  mediaId!: PostMediaEntity;
 
   @Column({ name: 'description', type: 'text', nullable: true })
   description!: string;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'created_by' })
-  createdBy!: number;
+  createdBy!: UserEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'updated_by' })
-  updatedBy!: number;
+  updatedBy!: UserEntity;
 
   @Column({
     name: 'created_at',

@@ -12,9 +12,9 @@ export class PostMediaEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => PostEntity, (posts) => posts.id)
-  @JoinColumn({ name: 'posts_id' })
-  postsId!: number;
+  @ManyToOne(() => PostEntity, (posts) => posts.media)
+  @JoinColumn({ name: 'posts' })
+  posts!: PostEntity;
 
   @Column({ name: 'media_file', type: 'varchar', nullable: false })
   mediaFile!: string;

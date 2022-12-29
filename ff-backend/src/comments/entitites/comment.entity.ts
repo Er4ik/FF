@@ -15,11 +15,11 @@ export class CommentEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'created_by' })
-  crearedBy!: number;
+  createdBy!: UserEntity;
 
   @ManyToOne(() => PostMediaEntity, (post) => post.id)
   @JoinColumn({ name: 'post_id' })
-  postId: string;
+  postId: PostMediaEntity;
 
   @Column({
     name: 'created_at',
@@ -37,5 +37,5 @@ export class CommentEntity {
 
   @ManyToOne(() => CommentEntity, (comment) => comment.id)
   @JoinColumn({ name: 'comment_replied_to_id' })
-  commentRepliedToId: string;
+  commentRepliedToId: CommentEntity;
 }
