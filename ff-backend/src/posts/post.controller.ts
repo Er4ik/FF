@@ -39,8 +39,6 @@ export class PostController {
   async createUserPost(
     @Body(ValidationPipe) postCreateDto: CreatePostDto,
   ): Promise<PostEntity> {
-    // console.log('ISVALID ------->', isValid);
-
     return await this.postsService.createUserPost(postCreateDto);
   }
 }
