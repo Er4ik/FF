@@ -1,4 +1,3 @@
-import { UserEntity } from '../../users/entitites/user.entity';
 import {
   Column,
   Entity,
@@ -7,6 +6,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { UserEntity } from '../../users/entitites/user.entity';
 import { PostLikeEntity } from './post-likes.entity';
 import { PostMediaEntity } from './post-media.entity';
 
@@ -29,6 +30,14 @@ export class PostEntity {
 
   @Column({ name: 'updated_at', type: 'datetime', nullable: true })
   updatedAt!: Date;
+
+  @Column({
+    name: 'caption',
+    type: 'varchar',
+    length: '255',
+    nullable: true,
+  })
+  caption!: string;
 
   @Column({ name: 'ingredients', type: 'varchar', nullable: true })
   ingredients!: string;

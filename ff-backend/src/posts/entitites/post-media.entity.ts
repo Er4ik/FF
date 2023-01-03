@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { PostEntity } from './post.entity';
 
 @Entity({ name: `post_media_entity` })

@@ -1,10 +1,22 @@
-import { UserEntity } from '../../users/entitites/user.entity';
+import { IsOptional, MaxLength } from 'class-validator';
 
-export interface PostDto {
-  id: number;
-  createdBy: UserEntity;
-  createdAt?: Date;
-  updatedAt?: Date;
-  ingredients?: string;
-  steps?: string;
+import { AbstractEntityDto } from '../../shared/models/abstract-entity.dto';
+
+export interface PostStep {
+  photo: string;
+  ingredients: string[];
+  description: string;
+  time: number;
+}
+
+export class PostDto extends AbstractEntityDto {
+  @IsOptional()
+  @MaxLength(255)
+  caption?: string;
+
+  @IsOptional()
+  ingredients?: string[];
+
+  @IsOptional()
+  steps?: PostStep[];
 }
