@@ -13,7 +13,7 @@ export class PostMediaEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => PostEntity, (posts) => posts.media)
+  @ManyToOne(() => PostEntity, (posts) => posts.media, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'posts' })
   posts!: PostEntity;
 

@@ -5,8 +5,8 @@ import {
   HttpStatus,
   Param,
   Post,
+  Delete,
   Body,
-  Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -40,5 +40,14 @@ export class PostController {
     @Body(ValidationPipe) postCreateDto: CreatePostDto,
   ): Promise<PostEntity> {
     return await this.postsService.createUserPost(postCreateDto);
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteUserPost(
+    @Param() param: { uid: string; id: string },
+  ): Promise<void> {
+    const mockedUserId = 1; // TODO: must be fixed
+    return await this.postsService.deleteUserPost(param.id, mockedUserId);
   }
 }

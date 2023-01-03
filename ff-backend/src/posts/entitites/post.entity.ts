@@ -16,7 +16,7 @@ export class PostEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
   createdBy!: UserEntity;
 

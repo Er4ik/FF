@@ -8,11 +8,11 @@ export class PostLikeEntity {
   @PrimaryColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user' })
   user!: UserEntity;
 
-  @ManyToOne(() => PostEntity, (post) => post.likes)
+  @ManyToOne(() => PostEntity, (post) => post.likes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'post' })
   post!: PostEntity;
 }

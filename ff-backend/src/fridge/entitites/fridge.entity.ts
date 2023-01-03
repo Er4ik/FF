@@ -22,18 +22,18 @@ export class FridgeEntity {
   @Column({ name: 'type_weight', type: 'int', nullable: true })
   typeWeight!: number;
 
-  @ManyToOne(() => PostMediaEntity, (post) => post.id)
+  @ManyToOne(() => PostMediaEntity, (post) => post.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'media_id' })
   mediaId!: PostMediaEntity;
 
   @Column({ name: 'description', type: 'text', nullable: true })
   description!: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
   createdBy!: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'updated_by' })
   updatedBy!: UserEntity;
 

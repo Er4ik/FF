@@ -37,11 +37,11 @@ export class BasketEntity {
   @Column({ name: 'updated_at', type: 'datetime', nullable: true })
   updatedAt!: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
   createdBy!: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'updated_by' })
   updatedBy!: UserEntity;
 

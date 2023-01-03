@@ -100,4 +100,33 @@ export class PostService {
       this.errorHandler.handle(error);
     }
   }
+
+  async deleteUserPost(postId: string, userId: number): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+    }
+
+    const post = await this.postRepository.findOne({
+      where: {
+        id: +postId,
+      },
+      relations: ['createdBy'],
+    });
+
+    if (post?.createdBy?.id !== user.id) {
+      throw new HttpException(
+        `Post with id: "${postId}" does not exist for this user`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.postRepository.delete(post.id);
+    return;
+  }
 }

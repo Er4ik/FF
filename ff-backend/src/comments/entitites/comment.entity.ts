@@ -13,11 +13,11 @@ export class CommentEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
   createdBy!: UserEntity;
 
-  @ManyToOne(() => PostMediaEntity, (post) => post.id)
+  @ManyToOne(() => PostMediaEntity, (post) => post.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'post_id' })
   postId: PostMediaEntity;
 
@@ -35,7 +35,9 @@ export class CommentEntity {
   @Column({ name: 'comment', type: 'text', nullable: false })
   comment!: string;
 
-  @ManyToOne(() => CommentEntity, (comment) => comment.id)
+  @ManyToOne(() => CommentEntity, (comment) => comment.id, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'comment_replied_to_id' })
   commentRepliedToId: CommentEntity;
 }
