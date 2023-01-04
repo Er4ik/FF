@@ -5,13 +5,14 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Delete,
   Body,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CreatePostDto } from './dto/CreatePost.dto';
 
+import { CreateUpdatePostDto } from './dto/CreateUpdatePost.dto';
 import { PostEntity } from './entitites/post.entity';
 import { PostService } from './post.service';
 
@@ -29,7 +30,7 @@ export class PostController {
   @HttpCode(HttpStatus.OK)
   async getUserPostById(
     @Param() param: { uid: string; id: string },
-  ): Promise<PostEntity[]> {
+  ): Promise<PostEntity> {
     return await this.postsService.getUserPostById(param.id, param.uid);
   }
 
@@ -37,9 +38,25 @@ export class PostController {
   @UsePipes(ValidationPipe)
   @HttpCode(HttpStatus.CREATED)
   async createUserPost(
-    @Body(ValidationPipe) postCreateDto: CreatePostDto,
+    @Body(ValidationPipe) postCreateDto: CreateUpdatePostDto,
   ): Promise<PostEntity> {
     return await this.postsService.createUserPost(postCreateDto);
+  }
+
+  @Put('/:id')
+  @UsePipes(ValidationPipe)
+  @HttpCode(HttpStatus.OK)
+  async updateUserPost(
+    @Param('id') postId: string,
+    @Body(ValidationPipe) postUpdateDto: CreateUpdatePostDto,
+  ): Promise<PostEntity> {
+    const mockedUserId = 1; // TODO: must be fixed
+
+    return await this.postsService.updateUserPost(
+      mockedUserId,
+      postId,
+      postUpdateDto,
+    );
   }
 
   @Delete('/:id')

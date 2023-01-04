@@ -7,7 +7,7 @@ import { PostMediaEntity } from './entitites/post-media.entity';
 import { PostEntity } from './entitites/post.entity';
 import { ErrorHandlerService } from '../shared/helpers/error-handler/error-handler.service';
 import { LoggerService } from '../shared/helpers/logger/logger.service';
-import { CreatePostDto } from './dto/CreatePost.dto';
+import { CreateUpdatePostDto } from './dto/CreateUpdatePost.dto';
 import { UserEntity } from '../users/entitites/user.entity';
 
 @Injectable()
@@ -43,29 +43,65 @@ export class PostService {
     });
   }
 
+  async getPostTime(steps) {
+    if (!steps.length) {
+      return 0;
+    } else if (steps.length === 1) {
+      return steps[0].time;
+    }
+
+    return steps.reduce((prev, next) => prev?.time + next?.time);
+  }
+
+  async parsePostFields(posts: PostEntity[]): Promise<PostEntity[]> {
+    return posts.map((post: PostEntity) => {
+      const resPost = {
+        ...post,
+        ingredients: JSON.parse(post?.ingredients),
+      };
+
+      (async (steps) => await this.getPostTime(steps))(post.steps).then(
+        (time) => (resPost['time'] = time),
+      );
+
+      return resPost;
+    });
+  }
+
   async getAllUserPosts(userId: string): Promise<PostEntity[]> {
     try {
       const posts = await this.getUserPosts({ createdBy: { id: +userId } });
-      return posts;
+
+      return await this.parsePostFields(posts);
     } catch (error) {
       this.errorHandler.handle(error);
     }
   }
 
-  async getUserPostById(postId: string, userId: string): Promise<PostEntity[]> {
+  async getUserPostById(postId: string, userId: string): Promise<PostEntity> {
     try {
       const posts = await this.getUserPosts({
         id: +postId,
         createdBy: { id: +userId },
       });
 
-      return posts;
+      if (!posts.length) {
+        throw new HttpException(
+          `Post with id: ${postId} does not exist`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const parsedPost = await this.parsePostFields(posts);
+      const post = parsedPost[0];
+
+      return post;
     } catch (error) {
       this.errorHandler.handle(error);
     }
   }
 
-  async createUserPost(postDto: CreatePostDto): Promise<any> {
+  async createUserPost(postDto: CreateUpdatePostDto): Promise<any> {
     try {
       const mockedUserId = 1; // TODO: must be fixed
 
@@ -82,7 +118,6 @@ export class PostService {
       const postToDb = {
         ...postDto,
         ingredients: JSON.stringify(postDto.ingredients),
-        steps: JSON.stringify(postDto.steps),
         createdBy: user,
       };
 
@@ -95,7 +130,57 @@ export class PostService {
         );
       }
 
+      this.logger.info(
+        `Post was successfully created: ${JSON.stringify(post)}`,
+      );
+
       return post;
+    } catch (error) {
+      this.errorHandler.handle(error);
+    }
+  }
+
+  async updateUserPost(
+    userId: number,
+    postId: string,
+    postDto: CreateUpdatePostDto,
+  ): Promise<any> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          id: +userId,
+        },
+      });
+
+      if (!user) {
+        throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+      }
+
+      const post = await this.postRepository.findOne({
+        where: {
+          id: +postId,
+        },
+      });
+
+      if (!post) {
+        throw new HttpException(
+          `Post with id: ${postId} does not exist`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      Object.assign(post, {
+        ...postDto,
+        ingredients: JSON.stringify(postDto.ingredients),
+        createdBy: user,
+      });
+
+      const updatedPost = await this.postRepository.save(post);
+      this.logger.info(
+        `Post was successfully updated: ${JSON.stringify(updatedPost)}`,
+      );
+
+      return updatedPost;
     } catch (error) {
       this.errorHandler.handle(error);
     }
@@ -127,6 +212,7 @@ export class PostService {
     }
 
     await this.postRepository.delete(post.id);
+    this.logger.info(`Post with id: ${postId} was successfully deleted`);
     return;
   }
 }

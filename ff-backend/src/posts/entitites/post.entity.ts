@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 
 import { UserEntity } from '../../users/entitites/user.entity';
+import { PostStepDto } from '../dto/userPosts.dto';
 import { PostLikeEntity } from './post-likes.entity';
 import { PostMediaEntity } from './post-media.entity';
 
@@ -43,7 +44,7 @@ export class PostEntity {
   ingredients!: string;
 
   @Column({ name: 'steps', type: 'json', nullable: true })
-  steps!: string;
+  steps!: PostStepDto[];
 
   @OneToMany(() => PostLikeEntity, (postLikes) => postLikes.post)
   @JoinColumn({ name: 'likes' })
