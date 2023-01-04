@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { PostEntity } from './post.entity';
 
 @Entity({ name: `post_media_entity` })
@@ -12,9 +13,9 @@ export class PostMediaEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => PostEntity, (posts) => posts.id)
-  @JoinColumn({ name: 'posts_id' })
-  postsId!: number;
+  @ManyToOne(() => PostEntity, (posts) => posts.media, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'posts' })
+  posts!: PostEntity;
 
   @Column({ name: 'media_file', type: 'varchar', nullable: false })
   mediaFile!: string;
