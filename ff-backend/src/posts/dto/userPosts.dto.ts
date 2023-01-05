@@ -1,12 +1,21 @@
-import { IsOptional, MaxLength } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, MaxLength } from 'class-validator';
 
 import { AbstractEntityDto } from '../../shared/models/abstract-entity.dto';
 
-export interface PostStep {
-  photo: string;
-  ingredients: string[];
-  description: string;
-  time: number;
+export class PostStepDto {
+  @IsOptional()
+  photo?: string;
+
+  @IsOptional()
+  @IsArray()
+  ingredients?: string[];
+
+  @IsOptional()
+  description?: string;
+
+  @IsOptional()
+  @IsNumber()
+  time?: number;
 }
 
 export class PostDto extends AbstractEntityDto {
@@ -18,5 +27,9 @@ export class PostDto extends AbstractEntityDto {
   ingredients?: string[];
 
   @IsOptional()
-  steps?: PostStep[];
+  steps?: PostStepDto[];
+
+  @IsOptional()
+  @IsNumber()
+  time?: number;
 }
