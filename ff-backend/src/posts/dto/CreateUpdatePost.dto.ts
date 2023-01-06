@@ -1,8 +1,8 @@
 import { IsArray, IsOptional, MaxLength } from 'class-validator';
 
-import { PostStep } from './userPosts.dto';
+import { PostStepDto } from './userPosts.dto';
 
-export class CreatePostDto {
+export class CreateUpdatePostDto {
   @IsOptional()
   @MaxLength(255)
   caption?: string;
@@ -13,5 +13,5 @@ export class CreatePostDto {
 
   @IsOptional()
   @IsArray()
-  steps?: PostStep[];
+  steps?: PostStepDto[];
 }
