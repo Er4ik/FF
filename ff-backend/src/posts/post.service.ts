@@ -25,7 +25,7 @@ export class PostService {
     private readonly errorHandler: ErrorHandlerService,
   ) {}
 
-  async getUserPosts(parameters: any): Promise<PostEntity[]> {
+  async getUserPosts(parameters): Promise<PostEntity[]> {
     return await this.postRepository.find({
       where: parameters,
       relations: ['likes', 'media', 'likes.user'],
@@ -68,6 +68,12 @@ export class PostService {
     });
   }
 
+  /**
+   * Retrieves user posts by user id
+   * @param userId id of user to find posts
+   * also contain duplicates (automatically filtered out)
+   */
+
   async getAllUserPosts(userId: string): Promise<PostEntity[]> {
     try {
       const posts = await this.getUserPosts({ createdBy: { id: +userId } });
@@ -78,6 +84,14 @@ export class PostService {
     }
   }
 
+  /**
+   * Retrieves a post by a given `postId`. Will not
+   * failed if `undefined` / `null` value is gotten.
+   * Stringified JSON data from post parse before returning
+   * @param postId id of a post to find it
+   * @param userId if of a user to find the post
+   * from the database
+   */
   async getUserPostById(postId: string, userId: string): Promise<PostEntity> {
     try {
       const posts = await this.getUserPosts({
@@ -101,7 +115,12 @@ export class PostService {
     }
   }
 
-  async createUserPost(postDto: CreateUpdatePostDto): Promise<any> {
+  /**
+   * Creates a post. Will not
+   * failed if body has invalid data.
+   * @param postDto the data of a post to update in the db
+   */
+  async createUserPost(postDto: CreateUpdatePostDto): Promise<PostEntity> {
     try {
       const mockedUserId = 1; // TODO: must be fixed
 
@@ -140,6 +159,13 @@ export class PostService {
     }
   }
 
+  /**
+   * Updates the post by a given `postId`. Will not
+   * failed if `undefined` / `null` value is gotten.
+   * @param postId id of a post to find it
+   * @param userId if of a user to find the post
+   * @param postDto the data of a post to update in the db
+   */
   async updateUserPost(
     userId: number,
     postId: string,
@@ -186,6 +212,11 @@ export class PostService {
     }
   }
 
+  /**
+   * Deletes a post by post id
+   * @param postId an id of the post
+   * @param userId an id of the user
+   */
   async deleteUserPost(postId: string, userId: number): Promise<void> {
     const user = await this.userRepository.findOne({
       where: {
