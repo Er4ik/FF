@@ -10,6 +10,7 @@ import {
 import { UserEntity } from '../../users/entitites/user.entity';
 import { PostLikeEntity } from './post-likes.entity';
 import { PostMediaEntity } from './post-media.entity';
+import { CommentEntity } from '../../comments/entitites/comment.entity';
 
 @Entity({ name: `post_entity` })
 export class PostEntity {
@@ -52,4 +53,8 @@ export class PostEntity {
   @OneToMany(() => PostMediaEntity, (postMedia) => postMedia.posts)
   @JoinColumn({ name: 'media' })
   media!: PostMediaEntity[];
+
+  @OneToMany(() => CommentEntity, (comments) => comments.post)
+  @JoinColumn({ name: 'comments' })
+  comments!: CommentEntity[];
 }

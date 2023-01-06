@@ -1,4 +1,4 @@
-import { PostMediaEntity } from '../../posts/entitites/post-media.entity';
+import { PostEntity } from './../../posts/entitites/post.entity';
 import { UserEntity } from '../../users/entitites/user.entity';
 import {
   Column,
@@ -6,6 +6,8 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  TreeChildren,
+  TreeParent,
 } from 'typeorm';
 
 @Entity({ name: `comment_entity` })
@@ -17,9 +19,9 @@ export class CommentEntity {
   @JoinColumn({ name: 'created_by' })
   createdBy!: UserEntity;
 
-  @ManyToOne(() => PostMediaEntity, (post) => post.id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'post_id' })
-  postId: PostMediaEntity;
+  @ManyToOne(() => PostEntity, (post) => post.comments, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'post' })
+  post: PostEntity;
 
   @Column({
     name: 'created_at',
@@ -35,9 +37,11 @@ export class CommentEntity {
   @Column({ name: 'comment', type: 'text', nullable: false })
   comment!: string;
 
-  @ManyToOne(() => CommentEntity, (comment) => comment.id, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'comment_replied_to_id' })
-  commentRepliedToId: CommentEntity;
+  @TreeChildren()
+  @JoinColumn({ name: 'children_id' })
+  childrenId: CommentEntity[];
+
+  @TreeParent()
+  @JoinColumn({ name: 'parent_id' })
+  parentId!: CommentEntity;
 }
