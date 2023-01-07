@@ -1,5 +1,5 @@
 import { Entity, JoinColumn, ManyToMany, PrimaryColumn } from 'typeorm';
-import { UserEntity } from '../../users/entitites/user.entity';
+import { UserEntity } from '../../user/entitites/user.entity';
 import { PostEntity } from './post.entity';
 
 @Entity({ name: `post_like_entity` })

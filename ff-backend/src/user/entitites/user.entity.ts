@@ -1,9 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { TokenEntity } from '../../token/entitites/token.entitites';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: `user_entity` })
 export class UserEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
+
+  @Column({ name: 'photo', type: 'varchar', nullable: true })
+  photo!: string;
 
   @Column({ name: 'first_name', type: 'varchar', length: 30, nullable: false })
   firstName!: string;
@@ -11,20 +15,29 @@ export class UserEntity {
   @Column({ name: 'last_name', type: 'varchar', length: 30, nullable: false })
   lastName!: string;
 
-  @Column({ name: 'username', type: 'varchar', length: 20, nullable: false })
-  username!: string | null;
+  @Column({ name: 'user_name', type: 'varchar', length: 20, nullable: false })
+  username!: string;
 
   @Column({ name: 'phone', type: 'varchar', length: 20, nullable: false })
   phone!: string;
 
-  @Column({ name: 'email', type: 'varchar', length: 255, nullable: false })
+  @Column({ name: 'email', type: 'varchar', length: 80, nullable: false })
   email!: string;
 
-  @Column({ name: 'password', type: 'varchar', length: 40, nullable: false })
+  @Column({ name: 'password', type: 'varchar', length: 255, nullable: false })
   password!: string;
 
-  @Column({ name: 'verification_code', type: 'int', nullable: true })
-  verificationCode!: number;
+  @OneToOne(() => TokenEntity, (user) => user.id)
+  @Column({
+    name: 'refresh_token',
+    type: 'varchar',
+    length: 255,
+    nullable: false,
+  })
+  refreshToken!: string;
+
+  @Column({ name: 'is_private', type: 'bool', default: false })
+  isPrivate!: boolean;
 
   @Column({ name: 'is_active', type: 'bool', default: false })
   isActive!: boolean;
