@@ -1,5 +1,4 @@
-import { TokenEntity } from '../../token/entitites/token.entitites';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: `user_entity` })
 export class UserEntity {
@@ -27,12 +26,11 @@ export class UserEntity {
   @Column({ name: 'password', type: 'varchar', length: 255, nullable: false })
   password!: string;
 
-  @OneToOne(() => TokenEntity, (user) => user.id)
   @Column({
     name: 'refresh_token',
     type: 'varchar',
     length: 255,
-    nullable: false,
+    nullable: true,
   })
   refreshToken!: string;
 

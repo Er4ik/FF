@@ -5,7 +5,9 @@ import {
   Param,
   Post,
   Delete,
-  Put,
+  //Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { UserCreateDto } from './dto/user-create.dto';
@@ -38,14 +40,16 @@ export class UserController {
   // async update() {}
 
   @Post('/registration')
-  async registration(@Body() userCreateDto: UserCreateDto) {
-    try {
-      const userData = await this.userService.createUser(userCreateDto);
+  @UsePipes(ValidationPipe)
+  async registration(@Body() userCreateDto: UserCreateDto): Promise<any> {
+    const userData = await this.userService.createUser(userCreateDto);
+    return userData;
+  }
 
-      return userData;
-    } catch (err) {
-      console.log(err);
-    }
+  @Get('/activate/:link')
+  async activate(@Param('link') link: string): Promise<void> {
+    await this.userService.activate(link);
+    return;
   }
 
   // @Post()

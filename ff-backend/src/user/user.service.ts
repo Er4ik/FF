@@ -2,14 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import * as uuid from 'uuid';
+//import * as uuid from 'uuid';
+import * as jwt from 'jsonwebtoken';
 
 import { UserCreateDto } from './dto/user-create.dto';
 import { UserFollowerEntity } from './entitites/user-follower.entity';
 import { UserEntity } from './entitites/user.entity';
 import { EmailService } from '../email/email.service';
-import { TokenService } from '../token/token.service';
+import { AuthService } from '../auth/auth.service';
 import { UserTokenDto } from './dto/user-token.dto';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class UserService {
@@ -19,7 +22,7 @@ export class UserService {
     @InjectRepository(UserFollowerEntity)
     private userFollowerRepository: Repository<UserFollowerEntity>,
     private readonly emailService: EmailService,
-    private readonly tokenService: TokenService,
+    private readonly authService: AuthService,
   ) {}
 
   async getOne(userId: string): Promise<UserEntity> {
@@ -72,22 +75,22 @@ export class UserService {
       }
 
       const hashPassword = await bcrypt.hash(password, 3);
-      const activationLink = uuid.v4();
+      //const activationLink = uuid.v4();
       const user = await this.userRepository.save({
         ...userDate,
         photo: userDate.photo ?? null,
         password: hashPassword,
-        role: userDate.role ?? 'userAAA',
-      });
-
-      await this.emailService.sendEmail({
-        to: email,
-        html: activationLink,
+        role: userDate.role ?? 'user',
       });
 
       const userDto = new UserTokenDto(user);
-      const tokens = await this.tokenService.generate({ ...userDto });
-      await this.tokenService.saveToken(userDto.id, tokens.refreshToken);
+      const tokens = await this.authService.generate({ ...userDto });
+      await this.authService.saveToken(userDto.id, tokens.refreshToken);
+
+      await this.emailService.sendEmail({
+        to: email,
+        link: `${process.env.API_URL}user/activate/${tokens.accessToken}`,
+      });
 
       return {
         ...tokens,
@@ -96,5 +99,17 @@ export class UserService {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  async activate(activateLink: string): Promise<void> {
+    const { id } = jwt.decode(activateLink) as UserTokenDto;
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new Error('Неккоректная ссылка для активации');
+    }
+
+    user.isActive = true;
+    await this.userRepository.save(user);
   }
 }
