@@ -1,20 +1,25 @@
-import { UserEntity } from '../../user/entitites/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { UserEntity } from '../../user/entitites/user.entity';
+import { PostStepDto } from '../dto/userPosts.dto';
+import { PostLikeEntity } from './post-likes.entity';
+import { PostMediaEntity } from './post-media.entity';
 
 @Entity({ name: `post_entity` })
 export class PostEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id!: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'created_by' })
-  createdBy!: number;
+  createdBy!: UserEntity;
 
   @Column({
     name: 'created_at',
@@ -27,9 +32,25 @@ export class PostEntity {
   @Column({ name: 'updated_at', type: 'datetime', nullable: true })
   updatedAt!: Date;
 
+  @Column({
+    name: 'caption',
+    type: 'varchar',
+    length: '255',
+    nullable: true,
+  })
+  caption!: string;
+
   @Column({ name: 'ingredients', type: 'varchar', nullable: true })
   ingredients!: string;
 
   @Column({ name: 'steps', type: 'json', nullable: true })
-  steps!: string;
+  steps!: PostStepDto[];
+
+  @OneToMany(() => PostLikeEntity, (postLikes) => postLikes.post)
+  @JoinColumn({ name: 'likes' })
+  likes!: PostLikeEntity[];
+
+  @OneToMany(() => PostMediaEntity, (postMedia) => postMedia.posts)
+  @JoinColumn({ name: 'media' })
+  media!: PostMediaEntity[];
 }
