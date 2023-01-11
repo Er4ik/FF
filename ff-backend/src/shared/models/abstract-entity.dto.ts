@@ -1,5 +1,7 @@
 import { IsNumber, IsDate, IsOptional } from 'class-validator';
 
+import { UserEntity } from '../../users/entitites/user.entity';
+
 export class AbstractEntityDto {
   @IsOptional()
   @IsNumber()
@@ -14,5 +16,5 @@ export class AbstractEntityDto {
   updatedAt?: Date;
 
   @IsOptional()
-  createdBy?: number;
+  createdBy?: UserEntity;
 }
