@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsByteLength, IsEmail, IsNotEmpty } from 'class-validator';
 
 export class UserCreateDto {
   readonly photo?: string;
@@ -13,5 +13,6 @@ export class UserCreateDto {
   email: string;
 
   @IsNotEmpty()
+  @IsByteLength(7, 32)
   password: string;
 }

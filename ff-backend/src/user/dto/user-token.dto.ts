@@ -10,6 +10,6 @@ export class UserTokenDto {
     this.email = model.email;
     this.id = model.id;
     this.isActive = model.isActive;
-    this.username = model.email;
+    this.username = model.username;
   }
 }

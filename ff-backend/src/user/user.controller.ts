@@ -5,14 +5,17 @@ import {
   Param,
   Post,
   Delete,
-  //Put,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
+import { Req } from '@nestjs/common/decorators';
 import { AuthService } from '../auth/auth.service';
 import { UserCreateDto } from './dto/user-create.dto';
+import { UserLoginDto } from './dto/user-login.dto';
 import { UserEntity } from './entitites/user.entity';
 import { UserService } from './user.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -22,7 +25,7 @@ export class UserController {
   ) {}
 
   @Get('/all')
-  async getAll(): Promise<UserEntity[]> {
+  async getAll(@Req() request): Promise<UserEntity[]> {
     return await this.userService.getAll();
   }
 
@@ -36,13 +39,19 @@ export class UserController {
     return await this.userService.deleteUser(userId);
   }
 
-  // @Put()
-  // async update() {}
-
   @Post('/registration')
   @UsePipes(ValidationPipe)
-  async registration(@Body() userCreateDto: UserCreateDto): Promise<any> {
+  async registration(
+    @Req() request,
+    @Body() userCreateDto: UserCreateDto,
+  ): Promise<any> {
     const userData = await this.userService.createUser(userCreateDto);
+    const options = {
+      maxAge: 60 * 60 * 24 * 30,
+      httpOnly: true,
+      secure: true,
+    };
+    request.res.setHeader('Set-Cookie', [userData.refreshToken], options);
     return userData;
   }
 
@@ -52,29 +61,17 @@ export class UserController {
     return;
   }
 
-  // @Post()
-  // async login() {
-  //   try {
-  //   } catch (e) {}
-  // }
-
-  // @Post()
-  // async logout() {
-  //   try {
-  //   } catch (e) {}
-  // }
-
-  // @Get('activate/:link')
-  // async activate(@Param('link') activateLink: string) {
-  //   try {
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // }
-
-  // @Get('refresh')
-  // async refresh() {
-  //   try {
-  //   } catch (e) {}
-  // }
+  @UseGuards(AuthGuard('local'))
+  @Post('/login')
+  @UsePipes(ValidationPipe)
+  async login(@Req() request, @Body() userLogin: UserLoginDto): Promise<any> {
+    const userData = await this.userService.login(userLogin);
+    const options = {
+      maxAge: 60 * 60 * 24 * 30,
+      httpOnly: true,
+      secure: true,
+    };
+    request.res.setHeader('Set-Cookie', [userData.refreshToken], options);
+    return userData;
+  }
 }

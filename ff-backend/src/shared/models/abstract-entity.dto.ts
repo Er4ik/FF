@@ -1,6 +1,6 @@
 import { IsNumber, IsDate, IsOptional } from 'class-validator';
 
-import { UserEntity } from '../../users/entitites/user.entity';
+import { UserEntity } from '../../user/entitites/user.entity';
 
 export class AbstractEntityDto {
   @IsOptional()

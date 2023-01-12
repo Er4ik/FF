@@ -15,6 +15,8 @@ import { AuthService } from '../auth/auth.service';
 import { UserTokenDto } from './dto/user-token.dto';
 import { LoggerService } from '../shared/helpers/logger/logger.service';
 import { ErrorHandlerService } from '../shared/helpers/error-handler/error-handler.service';
+import { UserLoginDto } from './dto/user-login.dto';
+import { response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -30,38 +32,52 @@ export class UserService {
   ) {}
 
   async getOne(userId: string): Promise<UserEntity> {
-    return await this.userRepository.findOne({
-      where: {
-        id: +userId,
-      },
-      select: {
-        username: true,
-        firstName: true,
-        lastName: true,
-        photo: true,
-        isPrivate: true,
-      },
-    });
+    try {
+      return await this.userRepository.findOne({
+        where: {
+          id: +userId,
+        },
+        select: {
+          username: true,
+          firstName: true,
+          lastName: true,
+          photo: true,
+          isPrivate: true,
+        },
+      });
+    } catch (error) {
+      this.errorHandler.handle(error);
+    }
   }
 
   async getAll(): Promise<UserEntity[]> {
-    return await this.userRepository.find({
-      select: {
-        id: true,
-        username: true,
-        firstName: true,
-        lastName: true,
-        photo: true,
-        isPrivate: true,
-        isActive: true,
-        isBlocked: true,
-      },
-    });
+    try {
+      return await this.userRepository.find({
+        select: {
+          id: true,
+          username: true,
+          firstName: true,
+          lastName: true,
+          photo: true,
+          isPrivate: true,
+          isActive: true,
+          isBlocked: true,
+        },
+      });
+    } catch (error) {
+      this.errorHandler.handle(error);
+    }
   }
 
   async deleteUser(userId: string): Promise<void> {
-    await this.userRepository.delete(userId);
-    return;
+    try {
+      await this.userRepository.delete(userId);
+      this.logger.info(`User was successfully deleted!`);
+
+      return;
+    } catch (error) {
+      this.errorHandler.handle(error);
+    }
   }
 
   async createUser(userDate: UserCreateDto) {
@@ -88,7 +104,7 @@ export class UserService {
       });
 
       const userDto = new UserTokenDto(user);
-      const tokens = await this.authService.generate({ ...userDto });
+      const tokens = await this.authService.generateTokenPair({ ...userDto });
       await this.authService.saveToken(userDto.id, tokens.refreshToken);
 
       await this.emailService.sendEmail({
@@ -100,10 +116,7 @@ export class UserService {
         `User was successfully created: id - ${user.id}, username - ${user.username}`,
       );
 
-      return {
-        ...tokens,
-        user: userDto,
-      };
+      return { ...tokens, user: userDto };
     } catch (error) {
       this.errorHandler.handle(error);
     }
@@ -122,8 +135,41 @@ export class UserService {
       await this.userRepository.save(user);
 
       this.logger.info(
-        `User was successfully activate: id - ${user.id}, username - ${user.username}`,
+        `User was successfully activated: id - ${user.id}, username - ${user.username}`,
       );
+    } catch (error) {
+      this.errorHandler.handle(error);
+    }
+  }
+
+  async login(userLogin: UserLoginDto): Promise<any> {
+    try {
+      const { email, username, password } = userLogin;
+      const user = await this.userRepository.findOne({
+        where: [{ username }, { email }],
+      });
+
+      if (!user) {
+        this.errorHandler.handle(`A user wasn't register`);
+      }
+
+      const isPassEquals = await bcrypt.compare(password, user.password);
+      if (!isPassEquals) {
+        this.errorHandler.handle(`Incorrect password!`);
+      }
+
+      const userDto = new UserTokenDto(user);
+      const tokens = await this.authService.generateTokenPair({ ...userDto });
+      await this.authService.saveToken(userDto.id, tokens.refreshToken);
+
+      return { ...tokens, user: userDto };
+    } catch (error) {
+      this.errorHandler.handle(error);
+    }
+  }
+
+  async logout(userLogin: UserLoginDto): Promise<any> {
+    try {
     } catch (error) {
       this.errorHandler.handle(error);
     }
