@@ -8,7 +8,7 @@ import { PostEntity } from './entitites/post.entity';
 import { ErrorHandlerService } from '../shared/helpers/error-handler/error-handler.service';
 import { LoggerService } from '../shared/helpers/logger/logger.service';
 import { CreateUpdatePostDto } from './dto/CreateUpdatePost.dto';
-import { UserEntity } from '../users/entitites/user.entity';
+import { UserEntity } from '../user/entitites/user.entity';
 
 @Injectable()
 export class PostService {

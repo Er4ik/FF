@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/Er4ik/FF#readme",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.3",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
     "eslint": "^8.26.0",
@@ -41,6 +42,10 @@
     "prettier": "^2.7.1"
   },
   "dependencies": {
-    "dotenv": "^16.0.3"
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "nodemailer": "^6.8.0"
   }
 }

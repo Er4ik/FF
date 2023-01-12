@@ -1,5 +1,5 @@
-import { PostMediaEntity } from '../../posts/entitites/post-media.entity';
-import { UserEntity } from '../../users/entitites/user.entity';
+import { PostMediaEntity } from '../../post/entitites/post-media.entity';
+import { UserEntity } from '../../user/entitites/user.entity';
 import {
   Column,
   Entity,

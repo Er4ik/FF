@@ -8,7 +8,7 @@ import { PostMediaEntity } from './entitites/post-media.entity';
 import { PostLikeEntity } from './entitites/post-likes.entity';
 import { LoggerModule } from '../shared/helpers/logger/logger.module';
 import { ErrorHandlerModule } from '../shared/helpers/error-handler/error-handler.module';
-import { UserEntity } from '../users/entitites/user.entity';
+import { UserEntity } from '../user/entitites/user.entity';
 
 @Module({
   controllers: [PostController],

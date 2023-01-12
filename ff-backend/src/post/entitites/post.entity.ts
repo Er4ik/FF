@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { UserEntity } from '../../users/entitites/user.entity';
+import { UserEntity } from '../../user/entitites/user.entity';
 import { PostStepDto } from '../dto/userPosts.dto';
 import { PostLikeEntity } from './post-likes.entity';
 import { PostMediaEntity } from './post-media.entity';
