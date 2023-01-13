@@ -6,6 +6,7 @@ import { CommentEntity } from './entitites/comment.entity';
 import { PostEntity } from '../posts/entitites/post.entity';
 import { LoggerService } from '../shared/helpers/logger/logger.service';
 import { ErrorHandlerService } from '../shared/helpers/error-handler/error-handler.service';
+import { buildTree } from '../shared/helpers/tree/tree';
 
 @Injectable()
 export class CommentService {
@@ -17,24 +18,6 @@ export class CommentService {
     private readonly logger: LoggerService,
     private readonly errorHandler: ErrorHandlerService,
   ) {}
-
-  async getCommentsTree(
-    comments: CommentEntity[],
-    currentLevelComments?: CommentEntity[],
-  ) {
-    if (!comments.length) return [];
-
-    const allComments = [...comments];
-    const currentTreeLevel = currentLevelComments
-      ? currentLevelComments
-      : allComments.filter((comment, id) => {
-          if (comment.parentId === null) {
-            comments.splice(id, 1);
-            return true;
-          }
-          return false;
-        });
-  }
 
   /**
    * Retrieves all comments on individual posts by a given 'pid'
@@ -49,9 +32,9 @@ export class CommentService {
         relations: ['comments', 'comments.parentId'],
       });
 
-      await this.getCommentsTree(postWithComments.comments);
+      const tree = buildTree(postWithComments.comments);
 
-      return postWithComments;
+      return tree;
     } catch (error) {
       this.errorHandler.handle(error);
     }
